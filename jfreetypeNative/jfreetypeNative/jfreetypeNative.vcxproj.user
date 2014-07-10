@@ -1,0 +1,8 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LocalDebuggerCommand>C:\Program Files\Java\jdk1.7.0_51\jre\bin\java.exe</LocalDebuggerCommand>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommandArguments> -classpath C:\dev\mine\eclipse\workspace\jFreeType\bin;C:\dev\mine\freetype\jfreetype\java\lib\jna-4.1.0.jar;C:\dev\mine\freetype\jfreetype\java\lib\jna-platform-4.1.0.jar me.lumpchen.jfreetype.Test</LocalDebuggerCommandArguments>
+  </PropertyGroup>
+</Project>
