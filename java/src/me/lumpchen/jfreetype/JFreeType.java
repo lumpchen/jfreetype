@@ -1,7 +1,5 @@
 package me.lumpchen.jfreetype;
 
-import java.awt.Color;
-
 import me.lumpchen.jfreetype.JFTLibrary.FTBBox;
 import me.lumpchen.jfreetype.JFTLibrary.FTGlyphBitmap;
 import me.lumpchen.jfreetype.JFTLibrary.FTGlyphMetrics;
@@ -18,6 +16,8 @@ public class JFreeType {
 	
 	private Pointer pFreeType = Pointer.NULL;
 	private Pointer face = Pointer.NULL;
+	
+	private Pointer stroker = Pointer.NULL;
 	
 	private double unitsPerEM = 0;
 	private double pxpeu = 0;
@@ -115,21 +115,16 @@ public class JFreeType {
 	private FTGlyphMetrics metrics;
 	
 	private void beatCharBitmap(char c) {
-		int glyph = this.library.j_FT_Get_Char_Index(face, (int) (c & 0xffff));
-		if (glyph == 0) {
+		int gid = this.library.j_FT_Get_Char_Index(face, (int) (c & 0xffff));
+		if (gid == 0) {
 			
 		}
-		this.library.j_FT_Load_Glyph(this.face, glyph, FTLoadFlag.DEFAULT);
-		
-		FTGlyphSlotRec slot = this.library.j_FT_Get_GlyphSlot(this.face);
-		this.metrics = slot.metrics;
-		
-		this.library.j_FT_Render_Glyph(this.face, FTRenderMode.NORMAL);
-		this.bitmap = this.library.j_FT_Get_Glyph_Bitmap(this.face);
+		this.beatGlyphBitmap(gid);
 	}
 	
 	private void beatGlyphBitmap(int gid) {
 		this.library.j_FT_Load_Glyph(this.face, gid, FTLoadFlag.DEFAULT);
+		this.library.j_FT_Outline_Embolden(this.face, this.pointSize);
 		
 		FTGlyphSlotRec slot = this.library.j_FT_Get_GlyphSlot(this.face);
 		this.metrics = slot.metrics;
@@ -138,24 +133,28 @@ public class JFreeType {
 		this.bitmap = this.library.j_FT_Get_Glyph_Bitmap(this.face);
 	}
 	
-	public GlyphSlotRec[] getGlyphSlots(String s, Color color) {
+	public GlyphSlotRec[] getGlyphSlots(String s) {
 		GlyphSlotRec[] glyphSlots = new GlyphSlotRec[s.length()]; 
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
 			this.beatCharBitmap(c);
-			glyphSlots[i] = new GlyphSlotRec(this.bitmap, this.metrics, this.pxpeu, color);
+			glyphSlots[i] = new GlyphSlotRec(this.bitmap, this.metrics, this.pxpeu);
 		}
 		
 		return glyphSlots;
 	}
 	
-	public GlyphSlotRec[] getGlyphSlots(char[] gid, Color color) {
+	public GlyphSlotRec[] getGlyphSlots(char[] gid) {
 		GlyphSlotRec[] glyphSlots = new GlyphSlotRec[gid.length]; 
 		for (int i = 0; i < gid.length; i++) {
 			this.beatGlyphBitmap(gid[i]);
-			glyphSlots[i] = new GlyphSlotRec(this.bitmap, this.metrics, this.pxpeu, color);
+			glyphSlots[i] = new GlyphSlotRec(this.bitmap, this.metrics, this.pxpeu);
 		}
 		
 		return glyphSlots;
+	}
+	
+	public void strokeOutline() {
+		this.stroker = this.library.j_FT_Stroker_Set(this.pFreeType, 1200, 0, 0, 0);
 	}
 }

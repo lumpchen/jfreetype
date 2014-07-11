@@ -36,9 +36,14 @@ public interface JFTLibrary extends Library {
 	
 	public FTBBox.ByValue j_FT_Glyph_Get_BBox(Pointer face);
 	
+	public Pointer j_FT_Stroker_Set(Pointer library, int radius, int line_cap, int line_join, int miter_limit);
+	public int j_FT_Glyph_Stroke(Pointer face, Pointer stroker, boolean destroy);
+	
+	public int j_FT_Outline_Embolden(Pointer face, int strength);
+	
 	public static interface FTLoadFlag {
 		public static final int DEFAULT 					 = 0x0;
-		public static final int NO_SCALE 					 = 1 << 0 ;
+		public static final int NO_SCALE 					 = 1 << 0;
 		public static final int NO_HINTING 					 = 1 << 1;
 		public static final int RENDER 						 = 1 << 2;
 		public static final int NO_BITMAP 					 = 1 << 3;
@@ -212,10 +217,6 @@ public interface JFTLibrary extends Library {
 		public short n_contours;
 	    public short n_points;
 
-//	    public FTVector[] points;
-//	    public byte[] tags;
-//	    public short[] contours;
-	    
 	    public Pointer points;
 	    public Pointer tags;
 	    public Pointer contours;

@@ -1,9 +1,6 @@
 package me.lumpchen.jfreetype;
 
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontFormatException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,25 +9,23 @@ import java.io.InputStream;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-import me.lumpchen.jfreetype.JFTLibrary.FTVector;
 import me.lumpchen.jfreetype.JFTLibrary.FTGlyphBitmap;
 import me.lumpchen.jfreetype.JFTLibrary.FTGlyphSlotRec;
+import me.lumpchen.jfreetype.JFTLibrary.FTVector;
 
 import com.sun.jna.Native;
-import com.sun.jna.NativeLong;
-import com.sun.jna.Pointer;
 
 public class Test {
 
 	public static void main(String[] args) throws IOException {
-//		 testBitmap();
+		// testBitmap();
 		// testlib();
-//		 testMetrics();
+		// testMetrics();
 		testString();
 	}
 
 	static void testString() throws IOException {
-		
+
 		JFrame frame = new JFrame();
 
 		frame.setSize(600, 600);
@@ -47,20 +42,20 @@ public class Test {
 		is.read(stream);
 		ft.open(stream, 0);
 
-		ft.setCharSize((int) (12 * 0.75), 96, 96);
+		ft.setCharSize((int) (36), 96, 96);
+		ft.strokeOutline();
 		
-		String s = "中文";
+		String s = "中 文繁殖复杂的事情";
 
-		GlyphSlotRec[] glyphs = ft.getGlyphSlots(s, Color.RED);
+		GlyphSlotRec[] glyphs = ft.getGlyphSlots(s);
 		canvas.drawString(glyphs);
-		
+
 		ft.close();
 
 		frame.add(canvas, BorderLayout.CENTER);
 		frame.setVisible(true);
 	}
-	
-	
+
 	static void testBitmap() throws IOException {
 		JFrame frame = new JFrame();
 
@@ -84,8 +79,6 @@ public class Test {
 		FTGlyphBitmap.ByValue bitmap = ft.getCharBitmap(c);
 
 		show(bitmap);
-
-		canvas.drawGlyphBitmap(bitmap, ft.getBBox());
 
 		ft.close();
 
@@ -112,7 +105,7 @@ public class Test {
 		System.out.println(metrics);
 	}
 
-	static void testlib() throws IOException {
+	static void testOutline() throws IOException {
 		JFreeType ft = new JFreeType();
 
 		File f = new File("c:/temp/msyh.ttf");
@@ -121,28 +114,28 @@ public class Test {
 		is.read(stream);
 		ft.open(stream, 0);
 
-		ft.setCharSize(16, 72, 72);
+		ft.setCharSize(6, 72, 72);
 
-		char c = '成';
+		char c = 'M';
 		// GlyphBitmap.ByValue bitmap = ft.getCharBitmap(c);
 
 		// show(bitmap);
 
 		FTGlyphSlotRec slot = ft.getGlyphSlot(c);
-		System.out.println(slot.metrics.vertAdvance);
+		System.out.println(slot.metrics.horiAdvance);
 
 		int n = slot.outline.n_points;
 
 		System.out.println(slot.outline.n_points);
 
 		FTVector[] pVec = slot.outline.getPoints();
-		// for (FTVector p : pVec) {
-		// System.err.println(p.x + " " + p.y);
-		// }
+		for (FTVector p : pVec) {
+			System.err.println(p.x + " " + p.y);
+		}
 
-		short[] tags = slot.outline.getContours();
-		for (short p : tags) {
-			System.err.println("" + (int) p);
+		byte[] tags = slot.outline.getTags();
+		for (byte p : tags) {
+			System.err.println("" + (int) (p & 0xff));
 		}
 
 		ft.close();
