@@ -42,8 +42,11 @@ public class Test {
 		is.read(stream);
 		ft.open(stream, 0);
 
+		String family = ft.getFamilyName();
+		System.out.println(family);
+		System.out.println(ft.getStyleName());
+		
 		ft.setCharSize((int) (36), 96, 96);
-		ft.strokeOutline();
 		
 		String s = "中 文繁殖复杂的事情";
 

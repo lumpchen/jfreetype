@@ -22,6 +22,8 @@ public interface JFTLibrary extends Library {
 	public int j_FT_Done_Face(Pointer face);
 	
 	public int j_FT_Get_Units_Per_EM(Pointer face);
+	public String j_family_name(Pointer face);
+	public String j_style_name(Pointer face);
 	public int j_num_glyphs(Pointer face);
 
 	public int j_FT_Set_Char_Size(Pointer face, int charWidth, int charHeight,
@@ -35,9 +37,6 @@ public interface JFTLibrary extends Library {
 	public FTGlyphBitmap.ByValue j_FT_Get_Glyph_Bitmap(Pointer face);
 	
 	public FTBBox.ByValue j_FT_Glyph_Get_BBox(Pointer face);
-	
-	public Pointer j_FT_Stroker_Set(Pointer library, int radius, int line_cap, int line_join, int miter_limit);
-	public int j_FT_Glyph_Stroke(Pointer face, Pointer stroker, boolean destroy);
 	
 	public int j_FT_Outline_Embolden(Pointer face, int strength);
 	
