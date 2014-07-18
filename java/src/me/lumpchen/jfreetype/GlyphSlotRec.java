@@ -8,12 +8,18 @@ import me.lumpchen.jfreetype.JFTLibrary.FTGlyphMetrics;
 
 public class GlyphSlotRec {
 	
-	public GlyphBitmap bitmap;
+	private char c;
+	private GlyphBitmap bitmap;
 	private GlyphMetrics metrics;
 	
-	public GlyphSlotRec(FTGlyphBitmap bitmap, FTGlyphMetrics ftMetrics, double pxpeu) {
+	public GlyphSlotRec(char c, FTGlyphBitmap bitmap, FTGlyphMetrics ftMetrics, double pxpeu) {
+		this.c = c;
 		this.bitmap = new GlyphBitmap(bitmap);
 		this.metrics = new GlyphMetrics(ftMetrics);
+	}
+	
+	public char getChar() {
+		return this.c;
 	}
 	
 	public BufferedImage getGlyphBitmap(Color color) {

@@ -21,7 +21,56 @@ public class Test {
 		// testBitmap();
 		// testlib();
 		// testMetrics();
-		testString();
+		// testString();
+		testType1();
+	}
+
+	static void testType1() throws IOException {
+		JFrame frame = new JFrame();
+
+		frame.setSize(600, 600);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		GlyphPanel canvas = new GlyphPanel();
+
+		JFreeType ft = new JFreeType();
+		// ft.open("c:/temp/msyh.ttf", 0);
+
+		File f = new File("c:/temp/t1/283182479599336");
+		InputStream is = new FileInputStream(f);
+		byte[] stream = new byte[(int) f.length()];
+		is.read(stream);
+		ft.open(stream, 0);
+
+		String family = ft.getFamilyName();
+		System.out.println(family);
+		System.out.println(ft.getStyleName());
+
+		ft.setCharSize((int) (36), 96, 96);
+
+		String s = "PDF Reference";
+
+		GlyphSlotRec[] glyphs = ft.getGlyphSlots(s);
+		canvas.drawString(glyphs);
+
+//		ft.close();
+
+		ft = new JFreeType();
+		f = new File("c:/temp/t1/283222649459342");
+		s = "$Adobe Systems Incorporated and its subsidiaries own a number of patents covering technology"
+				+ "AND EXPRESSLY DISCLAIMS ANY AND ALL WARRANTIES OF MERCHANTABILITY, FITNESS "
+				+ "FOR PARTICULAR PURPOSES, AND NONINFRINGEMENT OF THIRD-PARTY RIGHTS.";
+		is = new FileInputStream(f);
+		stream = new byte[(int) f.length()];
+		is.read(stream);
+		ft.open(stream, 0);
+		ft.setCharSize((int) (12), 96, 96);
+		glyphs = ft.getGlyphSlots(s);
+		canvas.drawString2(glyphs);
+		ft.close();
+
+		frame.add(canvas, BorderLayout.CENTER);
+		frame.setVisible(true);
 	}
 
 	static void testString() throws IOException {
@@ -45,14 +94,25 @@ public class Test {
 		String family = ft.getFamilyName();
 		System.out.println(family);
 		System.out.println(ft.getStyleName());
-		
+
 		ft.setCharSize((int) (36), 96, 96);
-		
+
 		String s = "中 文繁殖复杂的事情";
 
 		GlyphSlotRec[] glyphs = ft.getGlyphSlots(s);
 		canvas.drawString(glyphs);
 
+		ft.close();
+
+		ft = new JFreeType();
+		f = new File("c:/temp/simhei.ttf");
+		is = new FileInputStream(f);
+		stream = new byte[(int) f.length()];
+		is.read(stream);
+		ft.open(stream, 0);
+		ft.setCharSize((int) (12), 96, 96);
+		glyphs = ft.getGlyphSlots(s);
+		canvas.drawString2(glyphs);
 		ft.close();
 
 		frame.add(canvas, BorderLayout.CENTER);

@@ -37,6 +37,13 @@ public class GlyphPanel extends JPanel {
 		this.glyphs = glyphs;
 		this.repaint();
 	}
+	
+	
+	private GlyphSlotRec[] glyphs2;
+	public void drawString2(GlyphSlotRec[] glyphs) {
+		this.glyphs2 = glyphs;
+		this.repaint();
+	}
 
 	public void paint(Graphics g) {
 		super.paint(g);
@@ -72,6 +79,20 @@ public class GlyphPanel extends JPanel {
 			int y = (int) Math.round(baseY - glyph.getBearingY());
 			
 			BufferedImage img = glyph.getGlyphBitmap();
+			if (img != null) {
+				g2.drawImage(img, baseX, y, null);
+			}
+
+			baseX += advance;
+		}
+		
+		baseY += 100;
+		baseX = 60;
+		for (GlyphSlotRec glyph : this.glyphs2) {
+			double advance = glyph.getHAdvance();
+			int y = (int) Math.round(baseY - glyph.getBearingY());
+			
+			BufferedImage img = glyph.getGlyphBitmap(Color.BLUE);
 			if (img != null) {
 				g2.drawImage(img, baseX, y, null);
 			}

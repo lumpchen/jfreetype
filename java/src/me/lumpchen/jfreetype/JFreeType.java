@@ -25,19 +25,20 @@ public class JFreeType {
 	private double pointSize;
 	private int hRes;
 	private int vRes;
+	
+	private Pointer nativeStream;
 
 	public JFreeType() {
+		this.pFreeType = library.j_FT_Init_FreeType();
 	}
 
 	public boolean open(String path, int faceIndex) {
 		if (this.face != Pointer.NULL) {
 			this.close();
 		}
-		this.pFreeType = library.j_FT_Init_FreeType();
+		
 		this.face = this.library.j_FT_Open_Face(this.pFreeType, path, faceIndex);
-
 		this.unitsPerEM = this.library.j_FT_Get_Units_Per_EM(this.face);
-
 		return true;
 	}
 
@@ -45,9 +46,7 @@ public class JFreeType {
 		if (this.face != Pointer.NULL) {
 			this.close();
 		}
-
-		this.pFreeType = library.j_FT_Init_FreeType();
-
+		
 		Pointer nativeStream = new Memory(stream.length);
 		nativeStream.write(0, stream, 0, stream.length);
 
@@ -60,7 +59,9 @@ public class JFreeType {
 
 	public void close() {
 		this.library.j_FT_Done_Face(this.face);
-		this.pFreeType = library.j_FT_Init_FreeType();
+		this.face = Pointer.NULL;
+		this.library.j_FT_Done_FreeType(this.pFreeType);
+		this.pFreeType = Pointer.NULL;
 	}
 
 	public String getFamilyName() {
@@ -124,10 +125,11 @@ public class JFreeType {
 	private FTGlyphMetrics metrics;
 
 	private void beatCharBitmap(char c) {
-		int gid = this.library.j_FT_Get_Char_Index(face, (int) (c & 0xffff));
+		int gid = this.library.j_FT_Get_Char_Index(face, (int) (c ));
 		if (gid == 0) {
-
+			System.err.println("not found glyph: " + c + "(" + (int) c + ")");
 		}
+		
 		this.beatGlyphBitmap(gid);
 	}
 
@@ -147,7 +149,7 @@ public class JFreeType {
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
 			this.beatCharBitmap(c);
-			glyphSlots[i] = new GlyphSlotRec(this.bitmap, this.metrics, this.pxpeu);
+			glyphSlots[i] = new GlyphSlotRec(c, this.bitmap, this.metrics, this.pxpeu);
 		}
 
 		return glyphSlots;
@@ -157,7 +159,7 @@ public class JFreeType {
 		GlyphSlotRec[] glyphSlots = new GlyphSlotRec[gid.length];
 		for (int i = 0; i < gid.length; i++) {
 			this.beatGlyphBitmap(gid[i]);
-			glyphSlots[i] = new GlyphSlotRec(this.bitmap, this.metrics, this.pxpeu);
+			glyphSlots[i] = new GlyphSlotRec(gid[i], this.bitmap, this.metrics, this.pxpeu);
 		}
 
 		return glyphSlots;

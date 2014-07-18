@@ -51,7 +51,7 @@ public class GlyphBitmap {
 					this.glyphImg.setRGB(i, j, rgb);
 				}
 				if (gray == 0) {
-					this.glyphImg.setRGB(i, j, 0);
+					this.glyphImg.setRGB(i, j, 0xFFFFFF);
 				} else {
 					Color c = new Color(r, g, b, gray);
 					this.glyphImg.setRGB(i, j, c.getRGB());

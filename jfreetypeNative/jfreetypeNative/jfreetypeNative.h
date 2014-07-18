@@ -33,6 +33,7 @@ void* j_FT_Open_Face(void* p_library, const char* path, int index)
 	FT_Face face;
 	FT_New_Face(lib, path, index, &face);
 
+	FT_Select_Charmap(face , ft_encoding_unicode);
 	return face;
 }
 
@@ -43,6 +44,8 @@ void* j_FT_New_Memory_Face(void* p_library, void* bytes, int size, int index)
 
 	FT_Face face;
 	FT_New_Memory_Face(lib, (FT_Byte *)bytes, size, index, &face);
+
+	FT_Select_Charmap(face , ft_encoding_unicode);
 
 	return face;
 }
@@ -59,6 +62,20 @@ int j_num_glyphs(void* p_face)
 {
 	FT_Face face = (FT_Face) p_face;
 	return face->num_glyphs;
+}
+
+J_FT_EXPORT(FT_String*) j_family_name(void* p_face);
+FT_String* j_family_name(void* p_face) 
+{
+	FT_Face face = (FT_Face) p_face;
+	return face->family_name;
+}
+
+J_FT_EXPORT(FT_String*) j_style_name(void* p_face);
+FT_String* j_style_name(void* p_face) 
+{
+	FT_Face face = (FT_Face) p_face;
+	return face->style_name;
 }
 
 J_FT_EXPORT(int) j_FT_Set_Char_Size(void* , int, int, int, int);
@@ -82,9 +99,6 @@ J_FT_EXPORT(int) j_FT_Get_Char_Index(void* , int);
 int j_FT_Get_Char_Index(void* p_face, int c) 
 {
 	FT_Face face = (FT_Face) p_face;
-
-	FT_Select_Charmap(face , ft_encoding_unicode);
-
 	int glyph_index = FT_Get_Char_Index(face, c);
 
 	return glyph_index;
