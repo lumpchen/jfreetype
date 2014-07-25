@@ -194,4 +194,20 @@ int j_FT_Outline_Embolden(void* p_face, int strength )
 	return FT_Outline_Embolden(outline, strength);
 }
 
+
+J_FT_EXPORT(void) j_FT_Set_Transform(void* p_face, long m00, long m01, long m10, long m11);
+void j_FT_Set_Transform(void* p_face, long m00, long m01, long m10, long m11)
+{
+	FT_Face face = (FT_Face) p_face;
+
+	FT_Matrix matrix;
+	matrix.xx = m00;
+	matrix.xy = m01;
+	matrix.yx = m10;
+	matrix.yy = m11;
+
+	FT_Set_Transform(face, &matrix, 0);
+}
+
+
 #endif //_JFREETYPENATIVE_H_
