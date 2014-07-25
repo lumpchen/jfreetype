@@ -1,10 +1,15 @@
 package me.lumpchen.jfreetype;
 
 import java.awt.Color;
+import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+import java.awt.geom.Point2D.Double;
 import java.awt.image.BufferedImage;
 
 import me.lumpchen.jfreetype.JFTLibrary.FTGlyphBitmap;
 import me.lumpchen.jfreetype.JFTLibrary.FTGlyphMetrics;
+import me.lumpchen.jfreetype.JFTLibrary.FTVector;
 
 public class GlyphSlotRec {
 	
@@ -12,10 +17,11 @@ public class GlyphSlotRec {
 	private GlyphBitmap bitmap;
 	private GlyphMetrics metrics;
 	
-	public GlyphSlotRec(char c, FTGlyphBitmap bitmap, FTGlyphMetrics ftMetrics, double pxpeu) {
+	public GlyphSlotRec(char c, FTGlyphBitmap bitmap, FTGlyphMetrics ftMetrics, 
+			AffineTransform at, double pxpeu) {
 		this.c = c;
 		this.bitmap = new GlyphBitmap(bitmap);
-		this.metrics = new GlyphMetrics(ftMetrics);
+		this.metrics = new GlyphMetrics(ftMetrics, at);
 	}
 	
 	public char getChar() {

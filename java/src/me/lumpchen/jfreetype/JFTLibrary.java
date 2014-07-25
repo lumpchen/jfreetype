@@ -21,10 +21,12 @@ public interface JFTLibrary extends Library {
 	public Pointer j_FT_New_Memory_Face(Pointer library, Pointer byteStream, int size, int faceIndex);
 	public int j_FT_Done_Face(Pointer face);
 	
+	public int j_FT_Set_Transform(Pointer face, int m00, int m01, int m10, int m11);
 	public int j_FT_Get_Units_Per_EM(Pointer face);
 	public String j_family_name(Pointer face);
 	public String j_style_name(Pointer face);
 	public int j_num_glyphs(Pointer face);
+	
 
 	public int j_FT_Set_Char_Size(Pointer face, int charWidth, int charHeight,
 			int horzResolution, int vertResolution);

@@ -3,6 +3,7 @@ package me.lumpchen.jfreetype;
 import java.awt.BorderLayout;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -22,7 +23,38 @@ public class Test {
 		// testlib();
 		// testMetrics();
 		// testString();
-		testType1();
+		// testType1();
+
+		testMatrix();
+	}
+
+	static void testMatrix() throws IOException {
+		JFrame frame = new JFrame();
+
+		frame.setSize(600, 600);
+		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+		GlyphPanel canvas = new GlyphPanel();
+
+		JFreeType ft = new JFreeType();
+
+		File f = new File("c:/temp/msyh.ttf");
+		InputStream is = new FileInputStream(f);
+		byte[] stream = new byte[(int) f.length()];
+		is.read(stream);
+		ft.open(stream, 0);
+		
+		ft.setCharSize((int) (36), 96, 96);
+		ft.setMatrix(2, 90);
+		
+		String s = "PDF Reference";
+
+		GlyphSlotRec[] glyphs = ft.getGlyphSlots(s);
+		canvas.drawString(glyphs);
+
+		ft.close();
+		frame.add(canvas, BorderLayout.CENTER);
+		frame.setVisible(true);
 	}
 
 	static void testType1() throws IOException {
@@ -36,7 +68,7 @@ public class Test {
 		JFreeType ft = new JFreeType();
 		// ft.open("c:/temp/msyh.ttf", 0);
 
-		File f = new File("c:/temp/t1/283182479599336");
+		File f = new File("c:/temp/msyh.ttf");
 		InputStream is = new FileInputStream(f);
 		byte[] stream = new byte[(int) f.length()];
 		is.read(stream);
@@ -53,7 +85,7 @@ public class Test {
 		GlyphSlotRec[] glyphs = ft.getGlyphSlots(s);
 		canvas.drawString(glyphs);
 
-//		ft.close();
+		// ft.close();
 
 		ft = new JFreeType();
 		f = new File("c:/temp/t1/283222649459342");

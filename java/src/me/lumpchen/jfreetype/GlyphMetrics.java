@@ -1,5 +1,8 @@
 package me.lumpchen.jfreetype;
 
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
+
 import me.lumpchen.jfreetype.JFTLibrary.FTGlyphMetrics;
 
 public class GlyphMetrics {
@@ -15,18 +18,49 @@ public class GlyphMetrics {
 	public double vertBearingY;
 	public double vertAdvance;
 
-	public GlyphMetrics(FTGlyphMetrics metrics) {
+	public GlyphMetrics(FTGlyphMetrics metrics, AffineTransform at) {
+		double d[] = this.transfer(new AffineTransform(at), metrics.width.doubleValue(), metrics.height.doubleValue());
+		this.width = d[0];
+		this.height = d[1];
+		
+		d = this.transfer(new AffineTransform(at), metrics.horiBearingX.doubleValue(), metrics.horiBearingY.doubleValue());
+		this.horiBearingX = d[0];
+		this.horiBearingY = d[1];
+		
+		d = this.transfer(new AffineTransform(at), metrics.horiAdvance.doubleValue(), metrics.vertAdvance.doubleValue());
+		this.horiAdvance = d[0];
+		this.vertAdvance = d[1];
+		
+		d = this.transfer(new AffineTransform(at), metrics.vertBearingX.doubleValue(), metrics.vertBearingY.doubleValue());
+		this.vertBearingX = d[0];
+		this.vertBearingY = d[1];
+		
+//		double scale = 1 / 64.0d;
+//		this.width = metrics.width.intValue() * scale;
+//		this.height = metrics.height.intValue() * scale;
+//		
+//		this.horiBearingX = metrics.horiBearingX.intValue() * scale;
+//		this.horiBearingY = metrics.horiBearingY.intValue() * scale;
+//		
+//		this.horiAdvance = metrics.horiAdvance.intValue() * scale;
+//		this.vertAdvance = metrics.vertAdvance.intValue() * scale;
+//		
+//		this.vertBearingX = metrics.vertBearingX.intValue() * scale;
+//		this.vertBearingY = metrics.vertBearingY.intValue() * scale;
+	}
+	
+	private double[] transfer(AffineTransform at, double x, double y) {
 		double scale = 1 / 64.0d;
-		this.width = metrics.width.intValue() * scale;
-		this.height = metrics.height.intValue() * scale;
+		if (at == null) {
+			at = AffineTransform.getScaleInstance(scale, scale);
+		} else {
+			at.scale(scale, scale);
+		}
 		
-		this.horiBearingX = metrics.horiBearingX.intValue() * scale;
-		this.horiBearingY = metrics.horiBearingY.intValue() * scale;
-		this.horiAdvance = metrics.horiAdvance.intValue() * scale;
-		
-		this.vertBearingX = metrics.vertBearingX.intValue() * scale;
-		this.vertBearingY = metrics.vertBearingY.intValue() * scale;
-		this.vertAdvance = metrics.vertAdvance.intValue() * scale;
+		Point2D.Double p = new Point2D.Double(x, y);
+		Point2D.Double ptDst = new Point2D.Double();
+		at.transform(p, ptDst);
+		return new double[]{ptDst.x, ptDst.y};
 	}
 	
 	public String toString() {
