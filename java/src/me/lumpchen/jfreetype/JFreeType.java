@@ -1,14 +1,11 @@
 package me.lumpchen.jfreetype;
 
-import java.awt.geom.AffineTransform;
-
 import me.lumpchen.jfreetype.JFTLibrary.FTBBox;
 import me.lumpchen.jfreetype.JFTLibrary.FTGlyphBitmap;
 import me.lumpchen.jfreetype.JFTLibrary.FTGlyphMetrics;
 import me.lumpchen.jfreetype.JFTLibrary.FTGlyphSlotRec;
 import me.lumpchen.jfreetype.JFTLibrary.FTLoadFlag;
 import me.lumpchen.jfreetype.JFTLibrary.FTRenderMode;
-import me.lumpchen.jfreetype.JFTLibrary.FTVector;
 
 import com.sun.jna.Memory;
 import com.sun.jna.Pointer;
@@ -25,12 +22,11 @@ public class JFreeType {
 	private double unitsPerEM = 0;
 	private double pxpeu = 0;
 
-	private double pointSize;
 	private int hRes;
 	private int vRes;
-	
+
 	private Pointer nativeStream;
-	private AffineTransform at;
+	private AffineTransform at = new AffineTransform();
 
 	public JFreeType() {
 		this.pFreeType = library.j_FT_Init_FreeType();
@@ -40,7 +36,7 @@ public class JFreeType {
 		if (this.face != Pointer.NULL) {
 			this.close();
 		}
-		
+
 		this.face = this.library.j_FT_Open_Face(this.pFreeType, path, faceIndex);
 		this.unitsPerEM = this.library.j_FT_Get_Units_Per_EM(this.face);
 		return true;
@@ -50,7 +46,7 @@ public class JFreeType {
 		if (this.face != Pointer.NULL) {
 			this.close();
 		}
-		
+
 		Pointer nativeStream = new Memory(stream.length);
 		nativeStream.write(0, stream, 0, stream.length);
 
@@ -79,30 +75,47 @@ public class JFreeType {
 	public double getUnitPerEM() {
 		return this.unitsPerEM;
 	}
-	
-	public void setMatrix(double scale, double angel) {
+
+	public void setMatrix(double scaleX, double scaleY, double angel) {
+//		this.at.setToIdentity();
+//		double r = Math.toRadians(15);
+//		this.at.shear(r, 0);
+//		int m00 = (int) Math.round(at.m00 * 0x10000);
+//		int m10 = (int) Math.round(at.m10 * 0x10000);
+//		int m01 = (int) Math.round(at.m01 * 0x10000);
+//		int m11 = (int) Math.round(at.m11 * 0x10000);
+
+		
 		double r = Math.toRadians(angel);
-		int m00 = (int) Math.round(Math.cos(r) * scale * 0x10000);
-		int m01 = (int) -Math.round(Math.sin(r) * 0x10000);
-		int m10 = -m01;
-		int m11 = m00;
+		int m00 = (int) Math.round(Math.cos(r) * scaleX * 0x10000);
+		int m10 = (int) Math.round(Math.sin(r) * 0x10000);
+		int m01 = -m10;
+		int m11 = (int) Math.round(Math.cos(r) * scaleY * 0x10000);
+
+		double tan = Math.tan(Math.toRadians(15));
+		m01 += tan * m00;
+		m11 += tan * m10;
 		
-		this.at = new AffineTransform();
-		at.scale(scale, scale);
-		at.rotate(r);
-		
+
 		this.library.j_FT_Set_Transform(this.face, m00, m01, m10, m11);
 	}
 
-	public void setCharSize(double pointSize, int hRes, int vRes) {
-		this.pointSize = pointSize;
+	public void setCharSize(double pt, int hRes, int vRes) {
 		this.hRes = hRes;
 		this.vRes = vRes;
 
-		int size = (int) Math.round(pointSize * 64);
-		this.library.j_FT_Set_Char_Size(this.face, size, size, hRes, vRes);
+		int w = (int) Math.round(pt * 64);
+		int h = (int) Math.round(pt * 64);
+		this.library.j_FT_Set_Char_Size(this.face, w, h, hRes, vRes);
+	}
+	
+	public void setCharSize(double charWidth, double charHeight, int hRes, int vRes) {
+		this.hRes = hRes;
+		this.vRes = vRes;
 
-		this.pxpeu = pointSize * hRes / (72 * this.unitsPerEM);
+		int w = (int) Math.round(charWidth * 64);
+		int h = (int) Math.round(charHeight * 64);
+		this.library.j_FT_Set_Char_Size(this.face, w, h, hRes, vRes);
 	}
 
 	public FTGlyphSlotRec getGlyphSlot(char c) {
@@ -143,11 +156,11 @@ public class JFreeType {
 	private FTGlyphMetrics metrics;
 
 	private void beatCharBitmap(char c) {
-		int gid = this.library.j_FT_Get_Char_Index(face, (int) (c ));
+		int gid = this.library.j_FT_Get_Char_Index(face, (int) (c));
 		if (gid == 0) {
 			System.err.println("not found glyph: " + c + "(" + (int) c + ")");
 		}
-		
+
 		this.beatGlyphBitmap(gid);
 	}
 
@@ -165,7 +178,7 @@ public class JFreeType {
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
 			this.beatCharBitmap(c);
-			glyphSlots[i] = new GlyphSlotRec(c, this.bitmap, this.metrics, this.at, this.pxpeu);
+			glyphSlots[i] = new GlyphSlotRec(c, this.bitmap, this.metrics, this.at);
 		}
 
 		return glyphSlots;
@@ -175,7 +188,7 @@ public class JFreeType {
 		GlyphSlotRec[] glyphSlots = new GlyphSlotRec[gid.length];
 		for (int i = 0; i < gid.length; i++) {
 			this.beatGlyphBitmap(gid[i]);
-			glyphSlots[i] = new GlyphSlotRec(gid[i], this.bitmap, this.metrics, this.at, this.pxpeu);
+			glyphSlots[i] = new GlyphSlotRec(gid[i], this.bitmap, this.metrics, this.at);
 		}
 
 		return glyphSlots;

@@ -44,10 +44,11 @@ public class Test {
 		is.read(stream);
 		ft.open(stream, 0);
 		
-		ft.setCharSize((int) (36), 96, 96);
-		ft.setMatrix(2, 90);
+//		ft.setCharSize((int) (36), 96, 96);
+		ft.setCharSize(16, 96, 96);
+		ft.setMatrix(1, 1, 0);
 		
-		String s = "PDF Reference";
+		String s = "PDF 繁殖复杂Reference";
 
 		GlyphSlotRec[] glyphs = ft.getGlyphSlots(s);
 		canvas.drawString(glyphs);

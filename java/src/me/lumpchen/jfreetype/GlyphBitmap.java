@@ -63,39 +63,41 @@ public class GlyphBitmap {
 	}
 	
 	public BufferedImage getBitmap() {
-		if (this.glyphImg != null) {
-			return this.glyphImg;
-		}
+		return getBitmap(Color.black);
 		
-		if (this.width == 0) {
-			return null;
-		}
-
-		this.glyphImg = new BufferedImage(this.width, this.height, BufferedImage.TYPE_BYTE_GRAY);
-
-		for (int j = 0; j < this.height; j++) {
-			for (int i = 0; i < this.width; i++) {
-				int gray = (int) (data[j][i] & 0xff);
-
-				System.out.println(gray);
-				if (gray == 255) {
-					this.glyphImg.setRGB(i, j, 0);
-				}
-				if (gray == 0) {
-					this.glyphImg.setRGB(i, j, 0xFFFFFF);
-				} else {
-					gray = 255 - gray;
-					
-			        int rgb = ((0 & 0xFF) << 24) |
-			               ((gray & 0xFF) << 16) |
-			               ((gray & 0xFF) << 8)  |
-			               ((gray & 0xFF) << 0);
-					this.glyphImg.setRGB(i, j, rgb);
-				}
-			}
-		}
-
-		return this.glyphImg;
+//		if (this.glyphImg != null) {
+//			return this.glyphImg;
+//		}
+//		
+//		if (this.width == 0) {
+//			return null;
+//		}
+//
+//		this.glyphImg = new BufferedImage(this.width, this.height, BufferedImage.TYPE_BYTE_GRAY);
+//
+//		for (int j = 0; j < this.height; j++) {
+//			for (int i = 0; i < this.width; i++) {
+//				int gray = (int) (data[j][i] & 0xff);
+//
+//				System.out.println(gray);
+//				if (gray == 255) {
+//					this.glyphImg.setRGB(i, j, 0);
+//				}
+//				if (gray == 0) {
+//					this.glyphImg.setRGB(i, j, 0xFFFFFF);
+//				} else {
+//					gray = 255 - gray;
+//					
+//			        int rgb = ((0 & 0xFF) << 24) |
+//			               ((gray & 0xFF) << 16) |
+//			               ((gray & 0xFF) << 8)  |
+//			               ((gray & 0xFF) << 0);
+//					this.glyphImg.setRGB(i, j, rgb);
+//				}
+//			}
+//		}
+//
+//		return this.glyphImg;
 	}
 
 }
