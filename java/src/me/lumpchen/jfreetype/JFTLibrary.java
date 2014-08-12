@@ -42,6 +42,8 @@ public interface JFTLibrary extends Library {
 	
 	public int j_FT_Outline_Embolden(Pointer face, int strength);
 	
+	public int j_FT_Get_Kerning(Pointer face, int leftGlyph, int rightGlyph, int kernMode);
+	
 	public static interface FTLoadFlag {
 		public static final int DEFAULT 					 = 0x0;
 		public static final int NO_SCALE 					 = 1 << 0;

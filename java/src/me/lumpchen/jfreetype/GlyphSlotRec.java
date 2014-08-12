@@ -9,6 +9,7 @@ import me.lumpchen.jfreetype.JFTLibrary.FTGlyphMetrics;
 public class GlyphSlotRec {
 
 	private char c;
+	private int gid;
 	private GlyphBitmap bitmap;
 	private GlyphMetrics metrics;
 
@@ -20,6 +21,14 @@ public class GlyphSlotRec {
 
 	public char getChar() {
 		return this.c;
+	}
+	
+	public int getGlyph() {
+		return this.gid;
+	}
+	
+	public void setGlyph(int gid) {
+		this.gid = gid;
 	}
 
 	public BufferedImage getGlyphBitmap(Color color) {

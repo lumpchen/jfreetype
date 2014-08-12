@@ -25,7 +25,23 @@ public class Test {
 		// testString();
 		// testType1();
 
-		testMatrix();
+		// testMatrix();
+		testKening();
+	}
+	
+	static void testKening() throws IOException {
+		JFreeType ft = new JFreeType();
+
+		File f = new File("c:/temp/msyh.ttf");
+		InputStream is = new FileInputStream(f);
+		byte[] stream = new byte[(int) f.length()];
+		is.read(stream);
+		ft.open(stream, 0);
+
+		ft.setCharSize(32, 96, 96);
+		
+		double k = ft.getKerning('A', 'W');
+		System.out.println(k);
 	}
 
 	static void testMatrix() throws IOException {
@@ -43,11 +59,11 @@ public class Test {
 		byte[] stream = new byte[(int) f.length()];
 		is.read(stream);
 		ft.open(stream, 0);
-		
-//		ft.setCharSize((int) (36), 96, 96);
+
+		// ft.setCharSize((int) (36), 96, 96);
 		ft.setCharSize(16, 96, 96);
 		ft.setMatrix(1, 1, 0);
-		
+
 		String s = "PDF 繁殖复杂Reference";
 
 		GlyphSlotRec[] glyphs = ft.getGlyphSlots(s);

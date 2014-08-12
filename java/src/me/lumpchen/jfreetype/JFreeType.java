@@ -155,13 +155,14 @@ public class JFreeType {
 	private FTGlyphBitmap bitmap;
 	private FTGlyphMetrics metrics;
 
-	private void beatCharBitmap(char c) {
+	private int beatCharBitmap(char c) {
 		int gid = this.library.j_FT_Get_Char_Index(face, (int) (c));
 		if (gid == 0) {
 			System.err.println("not found glyph: " + c + "(" + (int) c + ")");
 		}
 
 		this.beatGlyphBitmap(gid);
+		return gid;
 	}
 
 	private void beatGlyphBitmap(int gid) {
@@ -177,8 +178,9 @@ public class JFreeType {
 		GlyphSlotRec[] glyphSlots = new GlyphSlotRec[s.length()];
 		for (int i = 0; i < s.length(); i++) {
 			char c = s.charAt(i);
-			this.beatCharBitmap(c);
+			int gid = this.beatCharBitmap(c);
 			glyphSlots[i] = new GlyphSlotRec(c, this.bitmap, this.metrics, this.at);
+			glyphSlots[i].setGlyph(gid);
 		}
 
 		return glyphSlots;
@@ -189,8 +191,30 @@ public class JFreeType {
 		for (int i = 0; i < gid.length; i++) {
 			this.beatGlyphBitmap(gid[i]);
 			glyphSlots[i] = new GlyphSlotRec(gid[i], this.bitmap, this.metrics, this.at);
+			glyphSlots[i].setGlyph(gid[i]);
 		}
 
 		return glyphSlots;
+	}
+	
+	public double getKerning(char left, char right) {
+		int leftGlyph = this.library.j_FT_Get_Char_Index(face, (int) (left));
+		if (leftGlyph == 0) {
+			return 0;
+		}
+		int rightGlyph = this.library.j_FT_Get_Char_Index(face, (int) (right));
+		if (rightGlyph == 0) {
+			return 0;
+		}
+
+		return this.getKerning(leftGlyph, rightGlyph);
+	}
+	
+	public double getKerning(int leftGlyph, int rightGlyph) {
+		if (leftGlyph == 0 || rightGlyph == 0) {
+			return 0;
+		}
+		int vec = this.library.j_FT_Get_Kerning(this.face, leftGlyph, rightGlyph, 0);
+		return vec;
 	}
 }
