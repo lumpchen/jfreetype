@@ -26,7 +26,7 @@ public class GlyphPanel extends JPanel {
 		this.setSize(500, 500);
 
 		try {
-			this.f = Font.createFont(Font.TRUETYPE_FONT, new File("c:/temp/msyh.ttf"));
+			this.f = Font.createFont(Font.TRUETYPE_FONT, new File("c:/temp/fonts/msyh.ttf"));
 			this.f = this.f.deriveFont(36.0f);
 		} catch (FontFormatException | IOException e) {
 			e.printStackTrace();

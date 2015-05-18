@@ -23,16 +23,18 @@ public class Test {
 		// testlib();
 		// testMetrics();
 		// testString();
-		// testType1();
+		 testType1();
 
 		// testMatrix();
-		testKening();
+//		testKening();
+		
+//		testOutline();
 	}
 	
 	static void testKening() throws IOException {
 		JFreeType ft = new JFreeType();
 
-		File f = new File("c:/temp/msyh.ttf");
+		File f = new File("c:/temp/fonts/msyh.ttf");
 		InputStream is = new FileInputStream(f);
 		byte[] stream = new byte[(int) f.length()];
 		is.read(stream);
@@ -54,7 +56,7 @@ public class Test {
 
 		JFreeType ft = new JFreeType();
 
-		File f = new File("c:/temp/msyh.ttf");
+		File f = new File("c:/temp/fonts/msyh.ttf");
 		InputStream is = new FileInputStream(f);
 		byte[] stream = new byte[(int) f.length()];
 		is.read(stream);
@@ -83,9 +85,9 @@ public class Test {
 		GlyphPanel canvas = new GlyphPanel();
 
 		JFreeType ft = new JFreeType();
-		// ft.open("c:/temp/msyh.ttf", 0);
+		// ft.open("c:/temp/fonts//msyh.ttf", 0);
 
-		File f = new File("c:/temp/msyh.ttf");
+		File f = new File("c:/temp/fonts/msyh.ttf");
 		InputStream is = new FileInputStream(f);
 		byte[] stream = new byte[(int) f.length()];
 		is.read(stream);
@@ -105,7 +107,7 @@ public class Test {
 		// ft.close();
 
 		ft = new JFreeType();
-		f = new File("c:/temp/t1/283222649459342");
+		f = new File("c:/temp/fonts/t1/283222649459342");
 		s = "$Adobe Systems Incorporated and its subsidiaries own a number of patents covering technology"
 				+ "AND EXPRESSLY DISCLAIMS ANY AND ALL WARRANTIES OF MERCHANTABILITY, FITNESS "
 				+ "FOR PARTICULAR PURPOSES, AND NONINFRINGEMENT OF THIRD-PARTY RIGHTS.";
@@ -132,9 +134,9 @@ public class Test {
 		GlyphPanel canvas = new GlyphPanel();
 
 		JFreeType ft = new JFreeType();
-		// ft.open("c:/temp/msyh.ttf", 0);
+		// ft.open("c:/temp/fonts//msyh.ttf", 0);
 
-		File f = new File("c:/temp/msyh.ttf");
+		File f = new File("c:/temp/fonts/msyh.ttf");
 		InputStream is = new FileInputStream(f);
 		byte[] stream = new byte[(int) f.length()];
 		is.read(stream);
@@ -154,7 +156,7 @@ public class Test {
 		ft.close();
 
 		ft = new JFreeType();
-		f = new File("c:/temp/simhei.ttf");
+		f = new File("c:/temp/fonts/simhei.ttf");
 		is = new FileInputStream(f);
 		stream = new byte[(int) f.length()];
 		is.read(stream);
@@ -177,9 +179,9 @@ public class Test {
 		GlyphPanel canvas = new GlyphPanel();
 
 		JFreeType ft = new JFreeType();
-		// ft.open("c:/temp/msyh.ttf", 0);
+		// ft.open("c:/temp/fonts//msyh.ttf", 0);
 
-		File f = new File("c:/temp/msyh.ttf");
+		File f = new File("c:/temp/fonts/msyh.ttf");
 		InputStream is = new FileInputStream(f);
 		byte[] stream = new byte[(int) f.length()];
 		is.read(stream);
@@ -201,7 +203,7 @@ public class Test {
 	static void testMetrics() throws IOException {
 		JFreeType ft = new JFreeType();
 
-		File f = new File("c:/temp/msyh.ttf");
+		File f = new File("c:/temp/fonts/msyh.ttf");
 		InputStream is = new FileInputStream(f);
 		byte[] stream = new byte[(int) f.length()];
 		is.read(stream);
@@ -220,15 +222,15 @@ public class Test {
 	static void testOutline() throws IOException {
 		JFreeType ft = new JFreeType();
 
-		File f = new File("c:/temp/msyh.ttf");
+		File f = new File("c:/temp/fonts/msyh.ttf");
 		InputStream is = new FileInputStream(f);
 		byte[] stream = new byte[(int) f.length()];
 		is.read(stream);
 		ft.open(stream, 0);
 
-		ft.setCharSize(6, 72, 72);
+		ft.setCharSize(16, 72, 72);
 
-		char c = 'M';
+		char c = '.';
 		// GlyphBitmap.ByValue bitmap = ft.getCharBitmap(c);
 
 		// show(bitmap);
